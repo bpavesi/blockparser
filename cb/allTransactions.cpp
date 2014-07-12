@@ -30,7 +30,7 @@ struct AllTransactions:public Callback
         parser
             .usage("[options]")
             .version("")
-            .description("dump all transactions for all  addresses")
+            .description("dump all transactions for all addresses")
             .epilog("")
         ;
         parser
