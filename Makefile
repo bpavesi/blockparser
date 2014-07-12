@@ -117,6 +117,13 @@ all:parser
 	@${CPLUS} -MD ${INC} ${COPT}  -c cb/transactions.cpp -o .objs/transactions.o
 	@mv .objs/transactions.d .deps
 
+.objs/alltransactions.o : cb/allTransactions.cpp
+	@echo c++ -- cb/allTransactions.cpp
+	@mkdir -p .deps
+	@mkdir -p .objs
+	@${CPLUS} -MD ${INC} ${COPT}  -c cb/allTransactions.cpp -o .objs/alltransactions.o
+	@mv .objs/alltransactions.d .deps
+
 .objs/opcodes.o : opcodes.cpp
 	@echo c++ -- opcodes.cpp
 	@mkdir -p .deps
@@ -176,6 +183,7 @@ OBJS=                       \
     .objs/sql.o             \
     .objs/taint.o           \
     .objs/transactions.o    \
+    .objs/alltransactions.o    \
     .objs/util.o            \
 
 parser:${OBJS}
