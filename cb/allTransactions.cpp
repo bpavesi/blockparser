@@ -19,7 +19,6 @@ struct AllTransactions:public Callback
     bool csv;
     optparse::OptionParser parser;
 
-    uint64_t sum;
     uint64_t adds;
     uint64_t subs;
     uint64_t nbTX;
@@ -59,7 +58,6 @@ struct AllTransactions:public Callback
         const char *argv[]
     )
     {
-        sum = 0;
         adds = 0;
         subs = 0;
         nbTX = 0;
@@ -86,7 +84,6 @@ struct AllTransactions:public Callback
 
         if(true) {
 
-            int64_t newSum = sum + value*(add ? 1 : -1);
 
             if(csv) {
                 printf("%6" PRIu64 ", \"", bTime/86400 + 25569);
@@ -94,9 +91,8 @@ struct AllTransactions:public Callback
                 printf("\", \"");
                 showHex(downTXHash ? downTXHash : txHash);
                 printf(
-                    "\",%17.08f,%17.08f\n",
-                    (add ? 1e-8 : -1e-8)*value,
-                    newSum*1e-8
+                    "\",%17.08f\n",
+                    (add ? 1e-8 : -1e-8)*value
                 );
             } else {
 
@@ -117,16 +113,13 @@ struct AllTransactions:public Callback
                 showHex(downTXHash ? downTXHash : txHash);
 
                 printf(
-                    " %24.08f %c %24.08f = %24.08f\n",
-                    sum*1e-8,
+                    " %c %24.08f\n",
                     add ? '+' : '-',
-                    value*1e-8,
-                    newSum*1e-8
+                    value*1e-8
                 );
             }
 
             (add ? adds : subs) += value;
-            sum = newSum;
             ++nbTX;
         }
     }
@@ -194,36 +187,27 @@ struct AllTransactions:public Callback
                 "\"Time\","
                 " \"Address\","
                 "                                  \"TXId\","
-                "                                                                   \"TXAmount\","
-                "     \"NewBalance\""
+                "                                                                   \"TXAmount\""
                 "\n"
             );
         }
         else {
             info("Dumping all transactions");
-            printf("    Time (GMT)                  Address                                     Transaction                                                                    OldBalance                     Amount                 NewBalance\n");
-            printf("    =======================================================================================================================================================================================================================\n");
+            printf("    Time (GMT)                  Address                                     Transaction                                                                    Amount\n");
+            printf("    ===================================================================================================================================================================\n");
         }
     }
 
     virtual void wrapup()
     {
         if(false==csv) {
-            printf(
-                "    =======================================================================================================================================================================================================================\n"
-            );
+            printf("    ===================================================================================================================================================================\n");
 
             info(
                 "\n"
                 "    transactions  = %" PRIu64 "\n"
-                "    received      = %17.08f\n"
-                "    spent         = %17.08f\n"
-                "    balance       = %17.08f\n"
                 "\n",
-                nbTX,
-                adds*1e-8,
-                subs*1e-8,
-                sum*1e-8
+                nbTX
             );
         }
     }
